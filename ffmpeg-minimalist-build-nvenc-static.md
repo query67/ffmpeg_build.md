@@ -3,10 +3,11 @@ Minimalist static FFmpeg build on Ubuntu 16.04 with Nvidia NVENC enabled.
 
 Original guide with a standard build is [here](https://gist.github.com/Brainiarc7/79b4b1f687d90b73d4bb2b99f02ff701).
 
+First, prepare for the build and create the workspace directory: 
+
     cd ~/
-    
+    mkdir ~/ffmpeg_sources
     sudo apt-get -y update && apt-get dist-upgrade -y
-    sudo apt-get -y purge lxd
     sudo apt-get -y install autoconf automake build-essential libass-dev \
       libtool \
       pkg-config texinfo zlib1g-dev
@@ -18,10 +19,10 @@ Original guide with a standard build is [here](https://gist.github.com/Brainiarc
     libghc-glut-doc libghc-glut-prof libalut-dev libxmu-dev libxmu-headers libxmu6 \
     libxmu6-dbg libxmuu-dev libxmuu1 libxmuu1-dbg --install-recommends --install-suggests -y
 
-    mkdir ~/ffmpeg_sources
+    
 
 **Build and deploy Yasm:**
-Yasm is an assembler for x86 optimizations used by x264 and FFmpeg. Highly recommended or your resulting build may be very slow.
+[Yasm](http://yasm.tortall.net/) is an assembler for x86 optimizations used by x264 and FFmpeg. Highly recommended or your resulting build may be very slow.
 
     cd ~/ffmpeg_sources
     wget http://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz
@@ -34,7 +35,7 @@ Yasm is an assembler for x86 optimizations used by x264 and FFmpeg. Highly recom
 
 
 **Build and deploy libx264 statically:**
-This is a H.264 video encoder. See the [H.264 Encoding Guide](https://trac.ffmpeg.org/wiki/Encode/H.264) for more information and usage examples.
+This library provides a H.264 video encoder. See the [H.264 Encoding Guide](https://trac.ffmpeg.org/wiki/Encode/H.264) for more information and usage examples.
 This requires ffmpeg to be configured with *--enable-gpl* *--enable-libx264*.
 
     cd ~/ffmpeg_sources
@@ -47,8 +48,8 @@ This requires ffmpeg to be configured with *--enable-gpl* *--enable-libx264*.
     make -j88 distclean
 
 
-Build and configure libx265:
-This is a H.265/HEVC video encoder. See the [H.265 Encoding Guide](https://trac.ffmpeg.org/wiki/Encode/H.265) for more information and usage examples.
+**Build and configure libx265:**
+This library provides a H.265/HEVC video encoder. See the [H.265 Encoding Guide](https://trac.ffmpeg.org/wiki/Encode/H.265) for more information and usage examples.
 
     sudo apt-get install cmake mercurial
     cd ~/ffmpeg_sources
@@ -59,7 +60,7 @@ This is a H.265/HEVC video encoder. See the [H.265 Encoding Guide](https://trac.
     make install
     make distclean
 
-Build and deploy the libfdk-aac library:
+**Build and deploy the libfdk-aac library:**
 This provides an AAC audio encoder. See the [AAC Audio Encoding Guide](https://trac.ffmpeg.org/wiki/Encode/AAC) for more information and usage examples.
 This requires ffmpeg to be configured with *--enable-libfdk-aac* (and *--enable-nonfree* if you also included *--enable-gpl*).
 
