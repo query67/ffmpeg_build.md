@@ -1,7 +1,7 @@
 Minimalist static FFmpeg build on Ubuntu 16.04 with Nvidia NVENC enabled.
 ------------------------------------------------------------------------
 
-Original guide with a standard build is [here](https://gist.github.com/Brainiarc7/79b4b1f687d90b73d4bb2b99f02ff701).
+Original guide with a standard build is [here](https://gist.github.com/Brainiarc7/95c9338a737aa36d9bb2931bed379219).
 
 First, prepare for the build and create the workspace directory: 
 
