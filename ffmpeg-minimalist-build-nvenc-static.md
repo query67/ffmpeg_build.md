@@ -29,9 +29,9 @@ First, prepare for the build and create the workspace directory:
     tar xzvf yasm-1.3.0.tar.gz
     cd yasm-1.3.0
     ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin"
-    make -j88
-    make -j88 install
-    make -j88 distclean
+    make -j$(nproc)
+    make -j$(nproc) install
+    make -j$(nproc) distclean
 
 
 **Build and deploy libx264 statically:**
@@ -44,8 +44,8 @@ This requires ffmpeg to be configured with *--enable-gpl* *--enable-libx264*.
     cd x264-snapshot*
     PATH="$HOME/bin:$PATH" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" --enable-static --disable-opencl
     PATH="$HOME/bin:$PATH" make -j88
-    make -j88 install
-    make -j88 distclean
+    make -j$(nproc) install
+    make -j$(nproc) distclean
 
 
 **Build and configure libx265:**
@@ -56,9 +56,9 @@ This library provides a H.265/HEVC video encoder. See the [H.265 Encoding Guide]
     hg clone https://bitbucket.org/multicoreware/x265
     cd ~/ffmpeg_sources/x265/build/linux
     PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_SHARED:bool=off ../../source
-    make
-    make install
-    make distclean
+    make -j$(nproc)
+    make -j$(nproc) install
+    make -j$(nproc) distclean
 
 **Build and deploy the libfdk-aac library:**
 This provides an AAC audio encoder. See the [AAC Audio Encoding Guide](https://trac.ffmpeg.org/wiki/Encode/AAC) for more information and usage examples.
@@ -70,9 +70,9 @@ This requires ffmpeg to be configured with *--enable-libfdk-aac* (and *--enable-
     cd mstorsjo-fdk-aac*
     autoreconf -fiv
     ./configure --prefix="$HOME/ffmpeg_build" --disable-shared
-    make
-    make install
-    make distclean
+    make -j$(nproc)
+    make -j$(nproc) install
+    make -j$(nproc) distclean
 
 
 **Deploy NVENC SDK:**
@@ -123,12 +123,12 @@ From within the SDK directory, do:
       --enable-libx265 \
       --enable-nvenc \
       --enable-nonfree
-    PATH="$HOME/bin:$PATH" make -j88
-    make -j88 install
-    make -j88 distclean
+    PATH="$HOME/bin:$PATH" make -j$(nproc)
+    make -j$(nproc) install
+    make -j$(nproc) distclean
     hash -r
 
-Since ~/bin is already in your path, you can call up ffmpeg directly.
+If ~/bin is already in your path, you can call up ffmpeg directly.
 
 
 
