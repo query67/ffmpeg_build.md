@@ -17,7 +17,7 @@ First, prepare for the build and create the workspace directory:
     sudo apt-get -y install glew-utils libglew-dbg libglew-dev libglew1.13 \
     libglewmx-dev libglewmx-dbg freeglut3 freeglut3-dev freeglut3-dbg libghc-glut-dev \
     libghc-glut-doc libghc-glut-prof libalut-dev libxmu-dev libxmu-headers libxmu6 \
-    libxmu6-dbg libxmuu-dev libxmuu1 libxmuu1-dbg --install-recommends --install-suggests -y
+    libxmu6-dbg libxmuu-dev libxmuu1 libxmuu1-dbg 
 
     
 
