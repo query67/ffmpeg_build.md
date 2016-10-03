@@ -79,24 +79,30 @@ This requires ffmpeg to be configured with *--enable-libfdk-aac* (and *--enable-
 
 First, install Nvidia's drivers:
 
-    sudo apt-get install nvidia-361-updates nvidia-361-updates-dev opencl-headers \
-    nvidia-cuda-toolkit --install-recommends -y 
+Activate the proper repo:
+
+    sudo add-apt-repository ppa:graphics-drivers/ppa
+    sudo apt-get update
+
+Then install nvidia-367:
+
+    apt-get install nvidia-367 nvidia-367-dev -y
+    apt-get install nvidia-cuda-toolkit --install-recommends -y
 
 At this stage, please reboot the node.
 
     sudo systemctl reboot
 
-Then proceed to download the Nvidia NVENC 6.0 SDK from the Nvidia Developer portal when the host is booted up:
+Then proceed to download the Nvidia NVENC 7.0 SDK from the Nvidia Developer portal when the host is booted up:
 
-    wget -c -v -nc https://developer.nvidia.com/video-sdk-601 -O video-sdk-601.zip
+We are using the NVENC 7.0 SDK from [here](https://developer.nvidia.com/designworks/video_codec_sdk/downloads/v7.0). Sign up with the developer program to access the download page [below](https://developer.nvidia.com/designworks/video_codec_sdk/downloads/v7.0?accept_eula=yes).
 
-Then extract with zip and navigate to the extracted directory:
+Extract and copy the NVENC SDK headers as needed:
 
-    unzip video-sdk-601.zip
+Then navigate to the extracted directory:
 
-Extract and copy the *NVENC SDK headers* as needed:
-
-    cd nvidia_video_sdk_6.0.1/Samples
+    unzip Video_Codec_SDK_7.0.1.zip
+    cd Video_Codec_SDK_7.0.1/Samples
 
 From within the SDK directory, do:
 
@@ -129,6 +135,7 @@ From within the SDK directory, do:
     hash -r
 
 If ~/bin is already in your path, you can call up ffmpeg directly.
+
 
 
 
