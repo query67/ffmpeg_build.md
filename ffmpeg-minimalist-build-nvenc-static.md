@@ -134,7 +134,6 @@ Note that there may be a newer version of the SDK available at the time, please 
       --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
       --bindir="$HOME/bin" \
       --enable-cuda \
-      --enable-nonfree \
       --enable-cuvid \
       --enable-libnpp \
       --extra-cflags=-I../nv_sdk \
