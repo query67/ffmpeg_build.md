@@ -99,7 +99,7 @@ Then proceed to download the [Nvidia NVENC 7.0 SDK](https://developer.nvidia.com
 
 We are using the NVENC 7.0 SDK from [here](https://developer.nvidia.com/designworks/video_codec_sdk/downloads/v7.0). Sign up with the developer program to access the download page [below](https://developer.nvidia.com/designworks/video_codec_sdk/downloads/v7.0?accept_eula=yes).
 
-Ensure that the SDK is downloaded to your home directory (`cd ~` to be sure) so as to  maintain the needed directory structure.
+Ensure that the SDK is downloaded to your `~/ffmpeg_sources` directory (`cd ~/ffmpeg_sources` to be sure) so as to  maintain the needed directory structure.
 
 Extract and copy the NVENC SDK headers as needed:
 
@@ -151,6 +151,7 @@ Note that there may be a newer version of the SDK available at the time, please 
     hash -r
 
 If `~/bin` is already in your path, you can call up ffmpeg directly.
+
 
 
 
