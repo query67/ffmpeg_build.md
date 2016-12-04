@@ -3,7 +3,9 @@ Minimalist static FFmpeg build on Ubuntu 16.04 with Nvidia NVENC enabled.
 
 Original guide with a standard build is [here](https://gist.github.com/Brainiarc7/95c9338a737aa36d9bb2931bed379219).
 
-First, prepare for the build and create the workspace directory: 
+With this guide, I'm adding more instructions to enable support for [NVIDIA CUVID](http://docs.nvidia.com/cuda/video-decoder/) and [NVIDIA NPP](https://developer.nvidia.com/npp) for enhanced encode and decode performance.
+
+First, prepare for the build and create the work space directory: 
 
     cd ~/
     mkdir ~/ffmpeg_sources
@@ -93,9 +95,11 @@ At this stage, please reboot the node.
 
     sudo systemctl reboot
 
-Then proceed to download the Nvidia NVENC 7.0 SDK from the Nvidia Developer portal when the host is booted up:
+Then proceed to download the [Nvidia NVENC 7.0 SDK](https://developer.nvidia.com/nvidia-video-codec-sdk) from the Nvidia Developer portal when the host is booted up:
 
 We are using the NVENC 7.0 SDK from [here](https://developer.nvidia.com/designworks/video_codec_sdk/downloads/v7.0). Sign up with the developer program to access the download page [below](https://developer.nvidia.com/designworks/video_codec_sdk/downloads/v7.0?accept_eula=yes).
+
+Ensure that the SDK is downloaded to your home directory (`cd ~` to be sure) so as to  maintain the needed directory structure.
 
 Extract and copy the NVENC SDK headers as needed:
 
@@ -109,7 +113,14 @@ From within the SDK directory, do:
     sudo cp -vr common/inc/GL/* /usr/include/GL/
     sudo cp -vr common/inc/*.h /usr/include/
 
+When done,do:
 
+    cd ~
+    mv Video_Codec_SDK_7.0.1 nv_sdk
+
+That will allow us to statically link to the SDK with ease, below.
+
+Note that there may be a newer version of the SDK available at the time, please adjust as appropriate.
 
 **Building a static ffmpeg binary with the required options:**
 
@@ -122,6 +133,11 @@ From within the SDK directory, do:
       --extra-cflags="-I$HOME/ffmpeg_build/include" \
       --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
       --bindir="$HOME/bin" \
+      --enable-cuda \
+      --enable-cuvid \
+      --enable-libnpp \
+      --extra-cflags=-I../nv_sdk
+      --extra-ldflags=-L../nv_sdk
       --enable-gpl \
       --enable-libass \
       --enable-libfdk-aac \
@@ -134,7 +150,8 @@ From within the SDK directory, do:
     make -j$(nproc) distclean
     hash -r
 
-If ~/bin is already in your path, you can call up ffmpeg directly.
+If `~/bin` is already in your path, you can call up ffmpeg directly.
+
 
 
 
