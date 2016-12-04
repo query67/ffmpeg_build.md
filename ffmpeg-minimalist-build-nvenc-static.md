@@ -137,8 +137,8 @@ Note that there may be a newer version of the SDK available at the time, please 
       --enable-nonfree \
       --enable-cuvid \
       --enable-libnpp \
-      --extra-cflags=-I../nv_sdk
-      --extra-ldflags=-L../nv_sdk
+      --extra-cflags=-I../nv_sdk \
+      --extra-ldflags=-L../nv_sdk \
       --enable-gpl \
       --enable-libass \
       --enable-libfdk-aac \
