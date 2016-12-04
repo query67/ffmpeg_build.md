@@ -60,7 +60,7 @@ This library provides a H.265/HEVC video encoder. See the [H.265 Encoding Guide]
     PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_SHARED:bool=off ../../source
     make -j$(nproc)
     make -j$(nproc) install
-    make -j$(nproc) distclean
+    make -j$(nproc) clean
 
 **Build and deploy the libfdk-aac library:**
 This provides an AAC audio encoder. See the [AAC Audio Encoding Guide](https://trac.ffmpeg.org/wiki/Encode/AAC) for more information and usage examples.
@@ -115,7 +115,7 @@ From within the SDK directory, do:
 
 When done,do:
 
-    cd ~
+    cd ~/ffmpeg_sources
     mv Video_Codec_SDK_7.0.1 nv_sdk
 
 That will allow us to statically link to the SDK with ease, below.
@@ -134,6 +134,7 @@ Note that there may be a newer version of the SDK available at the time, please 
       --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
       --bindir="$HOME/bin" \
       --enable-cuda \
+      --enable-nonfree \
       --enable-cuvid \
       --enable-libnpp \
       --extra-cflags=-I../nv_sdk
