@@ -152,6 +152,7 @@ Note that there may be a newer version of the SDK available at the time, please 
 
 If `~/bin` is already in your path, you can call up ffmpeg directly.
 
+**Hint:** Use [this](https://gist.github.com/Brainiarc7/2afac8aea75f4e01d7670bc2ff1afad1) guide to learn how to  launch ffmpeg in multiple instances for faster NVENC based encoding on capable hardware.
 
 
 
