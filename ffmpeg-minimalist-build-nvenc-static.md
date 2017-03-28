@@ -138,6 +138,8 @@ Note that there may be a newer version of the SDK available at the time, please 
       --enable-libnpp \
       --extra-cflags=-I../nv_sdk \
       --extra-ldflags=-L../nv_sdk \
+      --extra-cflags="-I/usr/local/cuda/include/" \
+      --extra-ldflags=-L/usr/local/cuda/lib64/ \
       --enable-gpl \
       --enable-libass \
       --enable-libfdk-aac \
