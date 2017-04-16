@@ -13,6 +13,34 @@ First, prepare for the build and create the work space directory:
     sudo apt-get -y install autoconf automake build-essential libass-dev \
       libtool \
       pkg-config texinfo zlib1g-dev
+      
+**Install CUDA 8 SDK from Nvidia's repository:**
+ 
+ Note that this phase also installs the Nvidia GPU driver package as a dependency.
+
+    mkdir ~/cuda && cd ~/cuda
+     wget -c -v -nc http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
+    
+    dpkg -i *.deb
+    apt-get -y update && apt-get -y install cuda
+
+Now, set up the environment variables for CUDA:
+
+Edit the `/etc/environment` file and append the following:
+
+    export CUDA_HOME=/usr/local/cuda-8.0
+    export PATH=/usr/local/cuda/bin:$PATH
+
+When done, remember to source the file:
+
+    source /etc/environment
+
+And also run:
+
+    ldconfig -vvvv
+
+(This phase assumes that you're logged in as root).
+
 
 **Install dependencies for NVENC:**
 
@@ -78,26 +106,15 @@ This requires ffmpeg to be configured with *--enable-libfdk-aac* (and *--enable-
 
 
 **Deploy NVENC SDK:**
+At this phase, we will assume that the end user has rebooted the node prior to proceeding with this phase.
+If not, proceed via:
 
-First, install Nvidia's drivers:
-
-Activate the proper repo:
-
-    sudo add-apt-repository ppa:graphics-drivers/ppa
-    sudo apt-get update
-
-Then install nvidia-367:
-
-    apt-get install nvidia-367 nvidia-367-dev -y
-    apt-get install nvidia-cuda-toolkit --install-recommends -y
-
-At this stage, please reboot the node.
 
     sudo systemctl reboot
 
 Then proceed to download the [Nvidia NVENC 7.0 SDK](https://developer.nvidia.com/nvidia-video-codec-sdk) from the Nvidia Developer portal when the host is booted up:
 
-We are using the NVENC 7.0 SDK from [here](https://developer.nvidia.com/designworks/video_codec_sdk/downloads/v7.0). Sign up with the developer program to access the download page [below](https://developer.nvidia.com/designworks/video_codec_sdk/downloads/v7.0?accept_eula=yes).
+We are using the NVENC 7.0 SDK for this.
 
 Ensure that the SDK is downloaded to your `~/ffmpeg_sources` directory (`cd ~/ffmpeg_sources` to be sure) so as to  maintain the needed directory structure.
 
