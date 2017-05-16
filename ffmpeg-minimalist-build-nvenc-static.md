@@ -112,9 +112,9 @@ If not, proceed via:
 
     sudo systemctl reboot
 
-Then proceed to download the [Nvidia NVENC 7.0 SDK](https://developer.nvidia.com/nvidia-video-codec-sdk) from the Nvidia Developer portal when the host is booted up:
+Then proceed to download the [latest Nvidia NVENC SDK](https://developer.nvidia.com/nvidia-video-codec-sdk) from the Nvidia Developer portal when the host is booted up:
 
-We are using the NVENC 7.0 SDK for this.
+We are using the latest NVENC SDK for this.
 
 Ensure that the SDK is downloaded to your `~/ffmpeg_sources` directory (`cd ~/ffmpeg_sources` to be sure) so as to  maintain the needed directory structure.
 
@@ -122,18 +122,18 @@ Extract and copy the NVENC SDK headers as needed:
 
 Then navigate to the extracted directory:
 
-    unzip Video_Codec_SDK_7.0.1.zip
-    cd Video_Codec_SDK_7.0.1/Samples
+    unzip Video_Codec_SDK_*.zip
+    cd Video_Codec_SDK_*/Samples
 
 From within the SDK directory, do:
 
-    sudo cp -vr common/inc/GL/* /usr/include/GL/
-    sudo cp -vr common/inc/*.h /usr/include/
+    sudo cp -vr Samples/common/inc/GL/* /usr/include/GL/
+    sudo cp -vr Samples/common/inc/*.h /usr/include/
 
 When done,do:
 
     cd ~/ffmpeg_sources
-    mv Video_Codec_SDK_7.0.1 nv_sdk
+    mv Video_Codec_SDK_* nv_sdk
 
 That will allow us to statically link to the SDK with ease, below.
 
@@ -150,7 +150,7 @@ Note that there may be a newer version of the SDK available at the time, please 
       --extra-cflags="-I$HOME/ffmpeg_build/include" \
       --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
       --bindir="$HOME/bin" \
-      --enable-cuda \
+      --enable-cuda-sdk \
       --enable-cuvid \
       --enable-libnpp \
       --extra-cflags=-I../nv_sdk \
