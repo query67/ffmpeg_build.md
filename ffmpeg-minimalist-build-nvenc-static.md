@@ -51,13 +51,13 @@ And also run:
 
     
 
-**Build and deploy Yasm:**
-[Yasm](http://yasm.tortall.net/) is an assembler for x86 optimizations used by x264 and FFmpeg. Highly recommended or your resulting build may be very slow.
+**Build and deploy nasm:**
+[Nasm](http://www.nasm.us/) is an assembler for x86 optimizations used by x264 and FFmpeg. Highly recommended or your resulting build may be very slow. Note that we're using the latest release candidate, and not the stable version as of the time of writing.
 
     cd ~/ffmpeg_sources
-    wget http://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz
-    tar xzvf yasm-1.3.0.tar.gz
-    cd yasm-1.3.0
+    wget http://www.nasm.us/pub/nasm/releasebuilds/2.14rc0/nasm-2.14rc0.tar.gz
+    tar xzvf nasm-2.14rc0.tar.gz
+    cd nasm-2.14rc0
     ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin"
     make -j$(nproc)
     make -j$(nproc) install
@@ -172,6 +172,7 @@ Note that there may be a newer version of the SDK available at the time, please 
 If `~/bin` is already in your path, you can call up ffmpeg directly.
 
 **Hint:** Use [this](https://gist.github.com/Brainiarc7/2afac8aea75f4e01d7670bc2ff1afad1) guide to learn how to  launch ffmpeg in multiple instances for faster NVENC based encoding on capable hardware.
+
 
 
 
