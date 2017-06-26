@@ -157,6 +157,42 @@ Note that there may be a newer version of the SDK available at the time, please 
       --extra-ldflags=-L../nv_sdk \
       --extra-cflags="-I/usr/local/cuda/include/" \
       --extra-ldflags=-L/usr/local/cuda/lib64/ \
+      --nvcc=$(which nvcc) \
+      --enable-gpl \
+      --enable-libass \
+      --enable-libfdk-aac \
+      --enable-libx264 \
+      --enable-libx265 \
+      --enable-nvenc \
+      --enable-nonfree
+    PATH="$HOME/bin:$PATH" make -j$(nproc)
+    make -j$(nproc) install
+    make -j$(nproc) distclean
+    hash -r
+    
+    
+You may also want to tune your build further by calling uon NVCC to generate a build optimized for your GPU's CUDA architecture only.
+
+The example below shows the build options to pass for Pascal's GM10x-series GPUs, with an SM version of 6.1:
+
+    cd ~/ffmpeg_sources
+    git clone https://github.com/FFmpeg/FFmpeg -b master
+    cd FFmpeg
+    PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
+      --prefix="$HOME/ffmpeg_build" \
+      --pkg-config-flags="--static" \
+      --extra-cflags="-I$HOME/ffmpeg_build/include" \
+      --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
+      --bindir="$HOME/bin" \
+      --enable-cuda-sdk \
+      --enable-cuvid \
+      --enable-libnpp \
+      --extra-cflags=-I../nv_sdk \
+      --extra-ldflags=-L../nv_sdk \
+      --extra-cflags="-I/usr/local/cuda/include/" \
+      --extra-ldflags=-L/usr/local/cuda/lib64/ \
+      --nvcc=$(which nvcc) \
+      --nvccflags="-gencode arch=compute_61,code=sm_61 -O2" \
       --enable-gpl \
       --enable-libass \
       --enable-libfdk-aac \
@@ -169,9 +205,13 @@ Note that there may be a newer version of the SDK available at the time, please 
     make -j$(nproc) distclean
     hash -r
 
+
 If `~/bin` is already in your path, you can call up ffmpeg directly.
+Note that the build instructions assume that the NVIDIA CUDA toolkit is on the system path, as is recommended during setup.
 
 **Hint:** Use [this](https://gist.github.com/Brainiarc7/2afac8aea75f4e01d7670bc2ff1afad1) guide to learn how to  launch ffmpeg in multiple instances for faster NVENC based encoding on capable hardware.
+
+
 
 
 
