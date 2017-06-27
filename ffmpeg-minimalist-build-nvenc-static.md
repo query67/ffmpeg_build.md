@@ -157,7 +157,6 @@ Note that there may be a newer version of the SDK available at the time, please 
       --extra-ldflags=-L../nv_sdk \
       --extra-cflags="-I/usr/local/cuda/include/" \
       --extra-ldflags=-L/usr/local/cuda/lib64/ \
-      --nvcc=$(which nvcc) \
       --enable-gpl \
       --enable-libass \
       --enable-libfdk-aac \
@@ -191,7 +190,6 @@ The example below shows the build options to pass for Pascal's GM10x-series GPUs
       --extra-ldflags=-L../nv_sdk \
       --extra-cflags="-I/usr/local/cuda/include/" \
       --extra-ldflags=-L/usr/local/cuda/lib64/ \
-      --nvcc=$(which nvcc) \
       --nvccflags="-gencode arch=compute_61,code=sm_61 -O2" \
       --enable-gpl \
       --enable-libass \
