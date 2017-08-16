@@ -14,30 +14,61 @@ First, prepare for the build and create the work space directory:
       libtool \
       pkg-config texinfo zlib1g-dev
       
+      
 **Install CUDA 8 SDK from Nvidia's repository:**
  
- Note that this phase also installs the Nvidia GPU driver package as a dependency.
+ Note that this phase will prompt you to install the device driver. Skip it, and skip the samples too.We will install the driver later. Fetch the installers first:
 
     mkdir ~/cuda && cd ~/cuda
-     wget -c -v -nc http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_8.0.61-1_amd64.deb
+     wget -c -v -nc https://developer.nvidia.com/compute/cuda/8.0/Prod2/local_installers/cuda_8.0.61_375.26_linux-run
+
+    wget -c -v https://developer.nvidia.com/compute/cuda/8.0/Prod2/patches/2/cuda_8.0.61.2_linux-run
     
-    dpkg -i *.deb
-    apt-get -y update && apt-get -y install cuda
+    chmod +x cuda_*
+
+Now, install the SDK, and skip the device driver setup:
+
+    ./cuda_8.0.61_375.26_linux-run
+
+When you're done, proceed to deploy the patch, accept the license and proceed:
+
+    ./cuda_8.0.61.2_linux-run
 
 Now, set up the environment variables for CUDA:
 
 Edit the `/etc/environment` file and append the following:
 
-    export CUDA_HOME=/usr/local/cuda-8.0
-    export PATH=/usr/local/cuda/bin:$PATH
+    CUDA_HOME=/usr/local/cuda-8.0
+    
+Now, append the PATH variable with the following:
+
+    /usr/local/cuda/bin
 
 When done, remember to source the file:
 
     source /etc/environment
 
+Now, create a custom conf file for the CUDA library path under /etc/ld.so.conf.d/cuda.conf, with the following entries:
+
+    nano /etc/ld.so.conf.d/cuda.conf
+
+Content:
+
+    /usr/local/cuda-8.0/lib64
+
 And also run:
 
     ldconfig -vvvv
+
+(This phase assumes that you're logged in as root).
+
+Now, deploy the device driver:
+
+    sudo add-apt-repository ppa:graphics-drivers/ppa
+    sudo apt-get update
+    sudo apt-get install nvidia-384
+
+
 
 (This phase assumes that you're logged in as root).
 
