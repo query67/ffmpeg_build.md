@@ -226,6 +226,7 @@ The example below shows the build options to pass for Pascal's GM10x-series GPUs
       --enable-libass \
       --enable-libfdk-aac \
       --enable-libx264 \
+      --extra-libs=-lpthread \
       --enable-libx265 \
       --enable-nvenc \
       --enable-nonfree
