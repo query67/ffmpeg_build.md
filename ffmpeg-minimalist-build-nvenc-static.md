@@ -15,30 +15,23 @@ First, prepare for the build and create the work space directory:
       pkg-config texinfo zlib1g-dev
       
       
-**Install CUDA 8 SDK from Nvidia's repository:**
+**Install CUDA 9.1 SDK from Nvidia's repository:**
  
- Note that this phase will prompt you to install the device driver. Skip it, and skip the samples too.We will install the driver later. Fetch the installers first:
+ Note that this phase will prompt you to install the device driver. Skip it, and skip the samples too.We will install the driver later. Fetch the repository installers first:
 
-    mkdir ~/cuda && cd ~/cuda
-     wget -c -v -nc https://developer.nvidia.com/compute/cuda/8.0/Prod2/local_installers/cuda_8.0.61_375.26_linux-run
-
-    wget -c -v https://developer.nvidia.com/compute/cuda/8.0/Prod2/patches/2/cuda_8.0.61.2_linux-run
+    sudo dpkg -i cuda-repo-ubuntu1604_9.1.85-1_amd64.deb
     
-    chmod +x cuda_*
-
-Now, install the SDK, and skip the device driver setup:
-
-    ./cuda_8.0.61_375.26_linux-run
-
-When you're done, proceed to deploy the patch, accept the license and proceed:
-
-    ./cuda_8.0.61.2_linux-run
+    sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
+    
+    sudo apt-get update
+    
+    sudo apt-get install cuda
 
 Now, set up the environment variables for CUDA:
 
 Edit the `/etc/environment` file and append the following:
 
-    CUDA_HOME=/usr/local/cuda-8.0
+    CUDA_HOME=/usr/local/cuda
     
 Now, append the PATH variable with the following:
 
@@ -48,39 +41,8 @@ When done, remember to source the file:
 
     source /etc/environment
 
-Now, create a custom conf file for the CUDA library path under /etc/ld.so.conf.d/cuda.conf, with the following entries:
 
-    nano /etc/ld.so.conf.d/cuda.conf
-
-Content:
-
-    /usr/local/cuda-8.0/lib64
-
-And also run:
-
-    ldconfig -vvvv
-
-(This phase assumes that you're logged in as root).
-
-Now, deploy the device driver:
-
-    sudo add-apt-repository ppa:graphics-drivers/ppa
-    sudo apt-get update
-    sudo apt-get install nvidia-384
-
-
-
-(This phase assumes that you're logged in as root).
-
-
-**Install dependencies for NVENC:**
-
-    sudo apt-get -y install glew-utils libglew-dbg libglew-dev libglew1.13 \
-    libglewmx-dev libglewmx-dbg freeglut3 freeglut3-dev freeglut3-dbg libghc-glut-dev \
-    libghc-glut-doc libghc-glut-prof libalut-dev libxmu-dev libxmu-headers libxmu6 \
-    libxmu6-dbg libxmuu-dev libxmuu1 libxmuu1-dbg 
-
-    
+   **Build FFmpeg's dependency chain:** 
 
 **Build and deploy nasm:**
 [Nasm](http://www.nasm.us/) is an assembler for x86 optimizations used by x264 and FFmpeg. Highly recommended or your resulting build may be very slow. Note that we're using the latest release candidate, and not the stable version as of the time of writing.
@@ -170,6 +132,18 @@ That will allow us to statically link to the SDK with ease, below.
 
 Note that there may be a newer version of the SDK available at the time, please adjust as appropriate.
 
+Take note that [changes to the inclusion of third party headers](https://git.videolan.org/?p=ffmpeg/nv-codec-headers.git) affects new builds, and this is fixed by:
+
+```
+git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git
+make
+sudo make install
+
+```
+
+Proceed as usual:
+
+
 **Building a static ffmpeg binary with the required options:**
 
     cd ~/ffmpeg_sources
@@ -201,7 +175,7 @@ Note that there may be a newer version of the SDK available at the time, please 
     hash -r
     
     
-You may also want to tune your build further by calling uon NVCC to generate a build optimized for your GPU's CUDA architecture only.
+You may also want to tune your build further by calling upon NVCC to generate a build optimized for your GPU's CUDA architecture only.
 
 The example below shows the build options to pass for Pascal's GM10x-series GPUs, with an SM version of 6.1:
 
@@ -235,11 +209,58 @@ The example below shows the build options to pass for Pascal's GM10x-series GPUs
     make -j$(nproc) distclean
     hash -r
 
+For the older Maxwell (GM204*-series) cards, the build below will generate optimized binaries for that CUDA architecture:
+
+```
+cd ~/ffmpeg_sources
+git clone https://github.com/FFmpeg/FFmpeg -b master
+cd FFmpeg
+PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
+--prefix="$HOME/ffmpeg_build" \
+--pkg-config-flags="--static" \
+--extra-cflags="-I$HOME/ffmpeg_build/include" \
+--extra-ldflags="-L$HOME/ffmpeg_build/lib" \
+--bindir="$HOME/bin" \
+--enable-cuda \
+--enable-cuvid \
+--enable-libnpp \
+--extra-cflags=-I../nv_sdk \
+--extra-ldflags=-L../nv_sdk \
+--extra-cflags="-I/usr/local/cuda/include/" \
+--extra-ldflags=-L/usr/local/cuda/lib64/ \
+--nvccflags="-gencode arch=compute_52,code=sm_52 -O2" \
+--enable-gpl \
+--enable-libass \
+--enable-libfdk-aac \
+--enable-libx264 \
+--enable-libx265 \
+--extra-libs=-lpthread \
+--enable-nvenc \
+--enable-nonfree
+PATH="$HOME/bin:$PATH" make -j$(nproc)
+make -j$(nproc) install
+make -j$(nproc) distclean
+hash -r
+```
+
+**Confirm that all GPUs are working:**
+
+```
+nvidia-smi -q | grep Encoder | wc -l
+
+```
+
+This should return the number of GPUs present , and in the case of the dual Tesla M60s, based on the [GM204GL](https://www.nvidia.com/object/tesla-m60.html) SKUs, expect the number to be 4 on a dual-GPU system as each card has a single NVENC chip per graphics processor.
+
+Note that on newer platforms (such as the Nvidia Pascal P1000), the number of NVENC chips per GPU may vary, and may be up to 3 per GPU, totalling to six per Tesla board. See the [GPU support matrix](https://developer.nvidia.com/video-encode-decode-gpu-support-matrix) for more information.
+
 
 If `~/bin` is already in your path, you can call up ffmpeg directly.
 Note that the build instructions assume that the NVIDIA CUDA toolkit is on the system path, as is recommended during setup.
 
 **Hint:** Use [this](https://gist.github.com/Brainiarc7/2afac8aea75f4e01d7670bc2ff1afad1) guide to learn how to  launch ffmpeg in multiple instances for faster NVENC based encoding on capable hardware.
+
+
 
 
 
