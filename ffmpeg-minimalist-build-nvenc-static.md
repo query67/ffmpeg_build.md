@@ -66,7 +66,7 @@ This requires ffmpeg to be configured with *--enable-gpl* *--enable-libx264*.
     tar xjvf last_x264.tar.bz2
     cd x264-snapshot*
     PATH="$HOME/bin:$PATH" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" --enable-static --disable-opencl
-    PATH="$HOME/bin:$PATH" make -j88
+    PATH="$HOME/bin:$PATH" make -j$(nproc) VERBOSE=1
     make -j$(nproc) install
     make -j$(nproc) distclean
 
