@@ -62,9 +62,8 @@ This library provides a H.264 video encoder. See the [H.264 Encoding Guide](http
 This requires ffmpeg to be configured with *--enable-gpl* *--enable-libx264*.
 
     cd ~/ffmpeg_sources
-    wget http://download.videolan.org/pub/x264/snapshots/last_x264.tar.bz2
-    tar xjvf last_x264.tar.bz2
-    cd x264-snapshot*
+    git clone http://git.videolan.org/git/x264.git -b stable
+    cd x264/
     PATH="$HOME/bin:$PATH" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" --enable-static --disable-opencl
     PATH="$HOME/bin:$PATH" make -j$(nproc) VERBOSE=1
     make -j$(nproc) install
