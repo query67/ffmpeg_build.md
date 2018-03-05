@@ -136,6 +136,7 @@ Take note that [changes to the inclusion of third party headers](https://git.vid
 
 ```
 git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git
+cd nv-codec-headers
 make
 sudo make install
 
