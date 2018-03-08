@@ -12,7 +12,7 @@ First, prepare for the build and create the work space directory:
     sudo apt-get -y update && apt-get dist-upgrade -y
     sudo apt-get -y install autoconf automake build-essential libass-dev \
       libtool \
-      pkg-config texinfo zlib1g-dev
+      pkg-config texinfo zlib1g-dev cmake mercurial
       
       
 **Install CUDA 9.1 SDK from Nvidia's repository:**
@@ -52,7 +52,7 @@ When done, remember to source the file:
     tar xzvf nasm-2.14rc0.tar.gz
     cd nasm-2.14rc0
     ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin"
-    make -j$(nproc)
+    make -j$(nproc) VERBOSE=1
     make -j$(nproc) install
     make -j$(nproc) distclean
 
@@ -73,12 +73,11 @@ This requires ffmpeg to be configured with *--enable-gpl* *--enable-libx264*.
 **Build and configure libx265:**
 This library provides a H.265/HEVC video encoder. See the [H.265 Encoding Guide](https://trac.ffmpeg.org/wiki/Encode/H.265) for more information and usage examples.
 
-    sudo apt-get install cmake mercurial
     cd ~/ffmpeg_sources
     hg clone https://bitbucket.org/multicoreware/x265
     cd ~/ffmpeg_sources/x265/build/linux
     PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_SHARED:bool=off ../../source
-    make -j$(nproc)
+    make -j$(nproc) VERBOSE=1
     make -j$(nproc) install
     make -j$(nproc) clean
 
@@ -92,7 +91,7 @@ This requires ffmpeg to be configured with *--enable-libfdk-aac* (and *--enable-
     cd mstorsjo-fdk-aac*
     autoreconf -fiv
     ./configure --prefix="$HOME/ffmpeg_build" --disable-shared
-    make -j$(nproc)
+    make -j$(nproc) VERBOSE=1
     make -j$(nproc) install
     make -j$(nproc) distclean
 
@@ -169,7 +168,7 @@ Proceed as usual:
       --enable-libx265 \
       --enable-nvenc \
       --enable-nonfree
-    PATH="$HOME/bin:$PATH" make -j$(nproc)
+    PATH="$HOME/bin:$PATH" make -j$(nproc) VERBOSE=1
     make -j$(nproc) install
     make -j$(nproc) distclean
     hash -r
@@ -204,7 +203,7 @@ The example below shows the build options to pass for Pascal's GM10x-series GPUs
       --enable-libx265 \
       --enable-nvenc \
       --enable-nonfree
-    PATH="$HOME/bin:$PATH" make -j$(nproc)
+    PATH="$HOME/bin:$PATH" make -j$(nproc) VERBOSE=1
     make -j$(nproc) install
     make -j$(nproc) distclean
     hash -r
@@ -242,6 +241,118 @@ make -j$(nproc) install
 make -j$(nproc) distclean
 hash -r
 ```
+
+**Handling package upgrades:**
+
+For individual packages availed via git, simply navigate to their source directory and run git pull followed by re-building them:
+
+**(a). For nasm:**
+
+```
+git clone http://repo.or.cz/w/nasm.git -b master
+cd nasm
+./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin"
+make -j$(nproc) VERBOSE=1
+make -j$(nproc) install
+make -j$(nproc) distclean
+```
+
+**(b). For x264:**
+```
+cd ~/ffmpeg_sources/x264
+git pull
+PATH="$HOME/bin:$PATH" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" --enable-shared --disable-opencl
+PATH="$HOME/bin:$PATH" make -j$(nproc) VERBOSE=1
+make -j$(nproc) install
+make -j$(nproc) distclean
+```
+
+**(c).  For x265:**
+```
+cd ~/ffmpeg_sources/x265
+git pull
+cd ~/ffmpeg_sources/x265/build/linux
+PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_SHARED:bool=on ../../source
+make -j$(nproc) VERBOSE=1
+make -j$(nproc) install
+make -j$(nproc) clean
+```
+
+**(d). For the FFmpeg NVENC headers:**
+
+```
+cd nv-codec-headers
+git pull
+make
+sudo make install
+```
+**(e). For FFmpeg:**
+
+**i. For Pascal - based GPU systems (GP10x):**
+
+```
+cd ~/ffmpeg_sources/FFmpeg
+PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig" ./configure \
+  --prefix="$HOME/ffmpeg_build" \
+  --pkg-config-flags="--shared" \
+  --extra-cflags="-I$HOME/ffmpeg_build/include" \
+  --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
+  --bindir="$HOME/bin" \
+  --enable-cuda-sdk \
+  --enable-cuvid \
+  --enable-libnpp \
+  --extra-cflags=-I../nv_sdk \
+  --extra-ldflags=-L../nv_sdk \
+  --extra-cflags="-I/usr/local/cuda/include/" \
+  --extra-ldflags=-L/usr/local/cuda/lib64/ \
+  --nvccflags="-gencode arch=compute_61,code=sm_61 -O2" \
+  --enable-gpl \
+  --enable-libass \
+  --enable-libfdk-aac \
+  --enable-libx264 \
+  --extra-libs=-lpthread \
+  --enable-libx265 \
+  --enable-nvenc \
+  --enable-nonfree
+PATH="$HOME/bin:$PATH" make -j$(nproc) VERBOSE=1
+make -j$(nproc) install
+make -j$(nproc) distclean
+hash -r
+```
+**ii. For Maxwell (GM20x-based Tesla systems):**
+
+```
+cd ~/ffmpeg_sources/FFmpeg
+PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig" ./configure \
+--prefix="$HOME/ffmpeg_build" \
+--extra-cflags="-I$HOME/ffmpeg_build/include" \
+--extra-ldflags="-L$HOME/ffmpeg_build/lib" \
+--bindir="$HOME/bin" \
+--enable-cuda \
+--enable-cuvid \
+--enable-libnpp \
+--extra-cflags=-I../nv_sdk \
+--extra-ldflags=-L../nv_sdk \
+--extra-cflags="-I/usr/local/cuda/include/" \
+--extra-ldflags=-L/usr/local/cuda/lib64/ \
+--nvccflags="-gencode arch=compute_52,code=sm_52 -O2" \
+--enable-gpl \
+--enable-libass \
+--enable-libfdk-aac \
+--enable-libx264 \
+--enable-libx265 \
+--extra-libs=-lpthread \
+--enable-nvenc \
+--enable-nonfree
+PATH="$HOME/bin:$PATH" make -j$(nproc) VERBOSE=1
+make -j$(nproc) install
+make -j$(nproc) distclean
+hash -r
+```
+
+**On nasm:**
+
+We build nasm from source, using the git master tip as it contains the latest assembler optimizations for modern processor architectures. When considering subsequent updates to FFmpeg, consider switching to the git clone rather than the tarball fetched from nasm.us. However, we retain both versions for assembler testing and compatibility, should the master tip version fail to build due to compiler errors and warnings.
 
 **Confirm that all GPUs are working:**
 
