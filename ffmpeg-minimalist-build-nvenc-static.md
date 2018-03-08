@@ -249,7 +249,7 @@ For individual packages availed via git, simply navigate to their source directo
 **(a). For nasm:**
 
 ```
-git clone http://repo.or.cz/w/nasm.git -b master
+git clone git://repo.or.cz/nasm.git
 cd nasm
 ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin"
 make -j$(nproc) VERBOSE=1
