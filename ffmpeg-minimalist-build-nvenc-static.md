@@ -249,8 +249,10 @@ For individual packages availed via git, simply navigate to their source directo
 **(a). For nasm:**
 
 ```
+cd ~/ffmpeg_sources
 git clone git://repo.or.cz/nasm.git
 cd nasm
+./autogen.sh
 ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin"
 make -j$(nproc) VERBOSE=1
 make -j$(nproc) install
