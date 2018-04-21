@@ -159,8 +159,6 @@ The example below shows the build options to pass for Pascal's GM10x-series GPUs
       --enable-cuda-sdk \
       --enable-cuvid \
       --enable-libnpp \
-      --extra-cflags=-I../nv_sdk \
-      --extra-ldflags=-L../nv_sdk \
       --extra-cflags="-I/usr/local/cuda/include/" \
       --extra-ldflags=-L/usr/local/cuda/lib64/ \
       --nvccflags="-gencode arch=compute_61,code=sm_61 -O2" \
