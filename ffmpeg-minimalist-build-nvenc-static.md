@@ -39,7 +39,7 @@ Edit the `/etc/environment` file and append the following:
     
 Now, append the PATH variable with the following:
 
-    /usr/local/cuda/bin
+    /usr/local/cuda/bin:$HOME/bin
 
 When done, remember to source the file:
 
