@@ -96,39 +96,6 @@ This requires ffmpeg to be configured with *--enable-libfdk-aac* (and *--enable-
     make -j$(nproc) distclean
 
 
-**Deploy NVENC SDK:**
-At this phase, we will assume that the end user has rebooted the node prior to proceeding with this phase.
-If not, proceed via:
-
-
-    sudo systemctl reboot
-
-Then proceed to download the [latest Nvidia NVENC SDK](https://developer.nvidia.com/nvidia-video-codec-sdk) from the Nvidia Developer portal when the host is booted up:
-
-We are using the latest NVENC SDK for this.
-
-Ensure that the SDK is downloaded to your `~/ffmpeg_sources` directory (`cd ~/ffmpeg_sources` to be sure) so as to  maintain the needed directory structure.
-
-Extract and copy the NVENC SDK headers as needed:
-
-Then navigate to the extracted directory:
-
-    unzip Video_Codec_SDK_*.zip
-    cd Video_Codec_SDK_*/Samples
-
-From within the SDK directory, do:
-
-    sudo cp -vr Samples/common/inc/GL/* /usr/include/GL/
-    sudo cp -vr Samples/common/inc/*.h /usr/include/
-
-When done,do:
-
-    cd ~/ffmpeg_sources
-    mv Video_Codec_SDK_* nv_sdk
-
-That will allow us to statically link to the SDK with ease, below.
-
-Note that there may be a newer version of the SDK available at the time, please adjust as appropriate.
 
 Take note that [changes to the inclusion of third party headers](https://git.videolan.org/?p=ffmpeg/nv-codec-headers.git) affects new builds, and this is fixed by:
 
@@ -157,8 +124,6 @@ Proceed as usual:
       --enable-cuda-sdk \
       --enable-cuvid \
       --enable-libnpp \
-      --extra-cflags=-I../nv_sdk \
-      --extra-ldflags=-L../nv_sdk \
       --extra-cflags="-I/usr/local/cuda/include/" \
       --extra-ldflags=-L/usr/local/cuda/lib64/ \
       --enable-gpl \
@@ -223,8 +188,6 @@ PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./conf
 --enable-cuda \
 --enable-cuvid \
 --enable-libnpp \
---extra-cflags=-I../nv_sdk \
---extra-ldflags=-L../nv_sdk \
 --extra-cflags="-I/usr/local/cuda/include/" \
 --extra-ldflags=-L/usr/local/cuda/lib64/ \
 --nvccflags="-gencode arch=compute_52,code=sm_52 -O2" \
@@ -303,8 +266,6 @@ PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig:/usr/li
   --enable-cuda-sdk \
   --enable-cuvid \
   --enable-libnpp \
-  --extra-cflags=-I../nv_sdk \
-  --extra-ldflags=-L../nv_sdk \
   --extra-cflags="-I/usr/local/cuda/include/" \
   --extra-ldflags=-L/usr/local/cuda/lib64/ \
   --nvccflags="-gencode arch=compute_61,code=sm_61 -O2" \
@@ -333,8 +294,6 @@ PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig:/usr/li
 --enable-cuda \
 --enable-cuvid \
 --enable-libnpp \
---extra-cflags=-I../nv_sdk \
---extra-ldflags=-L../nv_sdk \
 --extra-cflags="-I/usr/local/cuda/include/" \
 --extra-ldflags=-L/usr/local/cuda/lib64/ \
 --nvccflags="-gencode arch=compute_52,code=sm_52 -O2" \
