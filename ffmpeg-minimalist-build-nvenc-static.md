@@ -35,7 +35,7 @@ Ensure that you have the latest driver:
 
 ```
 sudo add-apt-repository ppa:graphics-drivers/ppa
-sudo apt-get update && sudo apt-get -y upgrade
+sudo apt-get update && sudo apt-get install nvidia-396 libcuda1-396 nvidia-opencl-icd-396
 ```
 
 Otherwise FFmpeg's NVENC encoders will crash with an error related to a minimum required version error check.
