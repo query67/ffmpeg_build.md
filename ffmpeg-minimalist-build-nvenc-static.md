@@ -104,6 +104,7 @@ This requires ffmpeg to be configured with *--enable-libfdk-aac* (and *--enable-
 Take note that [changes to the inclusion of third party headers](https://git.videolan.org/?p=ffmpeg/nv-codec-headers.git) affects new builds, and this is fixed by:
 
 ```
+cd ~/ffmpeg_sources
 git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git
 cd nv-codec-headers
 make
