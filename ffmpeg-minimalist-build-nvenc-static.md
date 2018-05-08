@@ -30,6 +30,15 @@ First, prepare for the build and create the work space directory:
     sudo apt-get update
     
     sudo apt-get install cuda
+    
+Ensure that you have the latest driver:
+
+```
+sudo add-apt-repository ppa:graphics-drivers/ppa
+sudo apt-get update && sudo apt-get -y upgrade
+```
+
+Otherwise FFmpeg's NVENC encoders will crash with an error related to a minimum required version error check.
 
 Now, set up the environment variables for CUDA:
 
