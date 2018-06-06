@@ -15,15 +15,15 @@ First, prepare for the build and create the work space directory:
       pkg-config texinfo zlib1g-dev cmake mercurial
       
       
-**Install CUDA 9.1 SDK from Nvidia's repository:**
+**Install CUDA 9.2 SDK from Nvidia's repository:**
  
  Note that this phase will prompt you to install the device driver. Skip it, and skip the samples too.We will install the driver later. Fetch the repository installers first:
 
     cd ~/ffmpeg_sources
     
-    wget -c -v -nc http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_9.1.85-1_amd64.deb
+    wget -c -v -nc https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_9.2.88-1_amd64.deb
     
-    sudo dpkg -i cuda-repo-ubuntu1604_9.1.85-1_amd64.deb
+    sudo dpkg -i cuda-repo-ubuntu1604_9.2.88-1_amd64.deb
     
     sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
     
@@ -37,13 +37,6 @@ Ensure that you have the latest driver:
 sudo add-apt-repository ppa:graphics-drivers/ppa
 sudo apt-get update && sudo apt-get -y upgrade
 ```
-
-**Note:** For Ubuntu 18.04LTS, the CUDA package is already in the repositories and can be simply installed by running:
-
-```
-sudo apt install nvidia-cuda-toolkit
-```
-The significance of this step in Ubuntu 18.04LTS will come to light below.
 
 We keep the device driver up to the latest version so as to pass FFmpeg's NVENC driver version check.
 
@@ -62,8 +55,6 @@ When done, remember to source the file:
     source /etc/environment
     
     
-For **Ubuntu 18.04LTS**, this is NOT needed IF you installed the toolkit as shown above.
-
 
    **Build FFmpeg's dependency chain:** 
 
@@ -134,7 +125,7 @@ sudo make install
 Proceed as usual:
 
 
-**Building a static ffmpeg binary with the required options (On Ubuntu 16.04LTS):**
+**Building a static ffmpeg binary with the required options:**
 
     cd ~/ffmpeg_sources
     git clone https://github.com/FFmpeg/FFmpeg -b master
@@ -226,102 +217,6 @@ make -j$(nproc) install
 make -j$(nproc) distclean
 hash -r
 ```
-
-**On Ubuntu 18.04LTS after installing the cuda toolkit as shown above:**
-
-**Generic build option:**
-
-    cd ~/ffmpeg_sources
-    git clone https://github.com/FFmpeg/FFmpeg -b master
-    cd FFmpeg
-    PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
-      --prefix="$HOME/ffmpeg_build" \
-      --pkg-config-flags="--static" \
-      --extra-cflags="-I$HOME/ffmpeg_build/include" \
-      --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
-      --bindir="$HOME/bin" \
-      --enable-cuda-sdk \
-      --enable-cuvid \
-      --enable-libnpp \
-      --extra-cflags="-I/usr/lib/cuda/include/" \
-      --extra-ldflags=-L/usr/lib/cuda/lib64/ \
-      --enable-gpl \
-      --enable-libass \
-      --enable-libfdk-aac \
-      --enable-libx264 \
-      --enable-libx265 \
-      --enable-nvenc \
-      --enable-nonfree
-    PATH="$HOME/bin:$PATH" make -j$(nproc) VERBOSE=1
-    make -j$(nproc) install
-    make -j$(nproc) distclean
-    hash -r
-    
-    
-You may also want to tune your build further by calling upon NVCC to generate a build optimized for your GPU's CUDA architecture only.
-
-The example below shows the build options to pass for Pascal's GM10x-series GPUs, with an SM version of 6.1:
-
-    cd ~/ffmpeg_sources
-    git clone https://github.com/FFmpeg/FFmpeg -b master
-    cd FFmpeg
-    PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
-      --prefix="$HOME/ffmpeg_build" \
-      --pkg-config-flags="--static" \
-      --extra-cflags="-I$HOME/ffmpeg_build/include" \
-      --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
-      --bindir="$HOME/bin" \
-      --enable-cuda-sdk \
-      --enable-cuvid \
-      --enable-libnpp \
-      --extra-cflags="-I/usr/lib/cuda/include/" \
-      --extra-ldflags=-L/usr/lib/cuda/lib64/ \
-      --nvccflags="-gencode arch=compute_61,code=sm_61 -O2" \
-      --enable-gpl \
-      --enable-libass \
-      --enable-libfdk-aac \
-      --enable-libx264 \
-      --extra-libs=-lpthread \
-      --enable-libx265 \
-      --enable-nvenc \
-      --enable-nonfree
-    PATH="$HOME/bin:$PATH" make -j$(nproc) VERBOSE=1
-    make -j$(nproc) install
-    make -j$(nproc) distclean
-    hash -r
-
-For the older Maxwell (GM204*-series) cards, the build below will generate optimized binaries for that CUDA architecture:
-
-```
-cd ~/ffmpeg_sources
-git clone https://github.com/FFmpeg/FFmpeg -b master
-cd FFmpeg
-PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
---prefix="$HOME/ffmpeg_build" \
---pkg-config-flags="--static" \
---extra-cflags="-I$HOME/ffmpeg_build/include" \
---extra-ldflags="-L$HOME/ffmpeg_build/lib" \
---bindir="$HOME/bin" \
---enable-cuda \
---enable-cuvid \
---enable-libnpp \
---extra-cflags="-I/usr/lib/cuda/include/" \
---extra-ldflags=-L/usr/lib/cuda/lib64/ \
---nvccflags="-gencode arch=compute_52,code=sm_52 -O2" \
---enable-gpl \
---enable-libass \
---enable-libfdk-aac \
---enable-libx264 \
---enable-libx265 \
---extra-libs=-lpthread \
---enable-nvenc \
---enable-nonfree
-PATH="$HOME/bin:$PATH" make -j$(nproc)
-make -j$(nproc) install
-make -j$(nproc) distclean
-hash -r
-```
-
 
 
 **Handling package upgrades:**
@@ -431,98 +326,6 @@ make -j$(nproc) distclean
 hash -r
 ```
 
-**On Ubuntu 18.04LTS after installing the cuda toolkit as shown above:**
-
-**Generic build option:**
-
-    cd ~/ffmpeg_sources
-    git clone https://github.com/FFmpeg/FFmpeg -b master
-    cd FFmpeg
-    PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
-      --prefix="$HOME/ffmpeg_build" \
-      --pkg-config-flags="--static" \
-      --extra-cflags="-I$HOME/ffmpeg_build/include" \
-      --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
-      --bindir="$HOME/bin" \
-      --enable-cuda-sdk \
-      --enable-cuvid \
-      --enable-libnpp \
-      --extra-cflags="-I/usr/lib/cuda/include/" \
-      --extra-ldflags=-L/usr/lib/cuda/lib64/ \
-      --enable-gpl \
-      --enable-libass \
-      --enable-libfdk-aac \
-      --enable-libx264 \
-      --enable-libx265 \
-      --enable-nvenc \
-      --enable-nonfree
-    PATH="$HOME/bin:$PATH" make -j$(nproc) VERBOSE=1
-    make -j$(nproc) install
-    make -j$(nproc) distclean
-    hash -r
-    
-    
- **For Pascal's GM10x-series GPUs, with an SM version of 6.1:**
-
-    cd ~/ffmpeg_sources
-    git clone https://github.com/FFmpeg/FFmpeg -b master
-    cd FFmpeg
-    PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
-      --prefix="$HOME/ffmpeg_build" \
-      --pkg-config-flags="--static" \
-      --extra-cflags="-I$HOME/ffmpeg_build/include" \
-      --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
-      --bindir="$HOME/bin" \
-      --enable-cuda-sdk \
-      --enable-cuvid \
-      --enable-libnpp \
-      --extra-cflags="-I/usr/lib/cuda/include/" \
-      --extra-ldflags=-L/usr/lib/cuda/lib64/ \
-      --nvccflags="-gencode arch=compute_61,code=sm_61 -O2" \
-      --enable-gpl \
-      --enable-libass \
-      --enable-libfdk-aac \
-      --enable-libx264 \
-      --extra-libs=-lpthread \
-      --enable-libx265 \
-      --enable-nvenc \
-      --enable-nonfree
-    PATH="$HOME/bin:$PATH" make -j$(nproc) VERBOSE=1
-    make -j$(nproc) install
-    make -j$(nproc) distclean
-    hash -r
-
-**For the older Maxwell (GM204*-series) cards:**
-
-```
-cd ~/ffmpeg_sources
-git clone https://github.com/FFmpeg/FFmpeg -b master
-cd FFmpeg
-PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
---prefix="$HOME/ffmpeg_build" \
---pkg-config-flags="--static" \
---extra-cflags="-I$HOME/ffmpeg_build/include" \
---extra-ldflags="-L$HOME/ffmpeg_build/lib" \
---bindir="$HOME/bin" \
---enable-cuda \
---enable-cuvid \
---enable-libnpp \
---extra-cflags="-I/usr/lib/cuda/include/" \
---extra-ldflags=-L/usr/lib/cuda/lib64/ \
---nvccflags="-gencode arch=compute_52,code=sm_52 -O2" \
---enable-gpl \
---enable-libass \
---enable-libfdk-aac \
---enable-libx264 \
---enable-libx265 \
---extra-libs=-lpthread \
---enable-nvenc \
---enable-nonfree
-PATH="$HOME/bin:$PATH" make -j$(nproc)
-make -j$(nproc) install
-make -j$(nproc) distclean
-hash -r
-```
 
 **On nasm:**
 
