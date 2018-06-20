@@ -37,6 +37,11 @@ Ensure that you have the latest driver:
 sudo add-apt-repository ppa:graphics-drivers/ppa
 sudo apt-get update && sudo apt-get -y upgrade
 ```
+On Ubuntu 18.04LTS, this should be enough for the device driver:
+
+```
+nvidia-kernel-source-396 nvidia-kernel-source-396 nvidia-driver-396
+```
 
 We keep the device driver up to the latest version so as to pass FFmpeg's NVENC driver version check.
 
