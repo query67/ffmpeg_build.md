@@ -10,6 +10,8 @@ If **all** you require is NVENC's enablement, you do NOT need the CUDA SDK.
 The `nv-codec-headers` (below) is ALL you require.
 However, the SDK is needed IF, and only IF, the usage of the `scale_npp` and any other CUDA-based filters is required.
 
+With that in mind, do note that the NVIDIA proprietary driver is mandatory. See the driver setup instructions below, and the warning notes for Ubuntu 18.04LTS.
+
 **Steps:**
 
 First, prepare for the build and create the work space directory:
