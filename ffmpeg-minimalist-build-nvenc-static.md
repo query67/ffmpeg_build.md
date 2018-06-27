@@ -10,6 +10,8 @@ If **all** you require is NVENC's enablement, you do NOT need the CUDA SDK.
 The `nv-codec-headers` (below) is ALL you require.
 However, the SDK is needed IF, and only IF, the usage of the `scale_npp` and any other CUDA-based filters is required.
 
+**Steps:**
+
 First, prepare for the build and create the work space directory:
 
 ```
