@@ -230,29 +230,6 @@ make -j$(nproc) distclean
 
 ```
 
-**Build and deploy libaom:**
-
-This library implements the Alliance for Open Media Video Codec reference implementation, and enabling the configuration switch `--enable-libaom` will enable FFmpeg's AV1 encoders.
-
-```
-mkdir -p ~/ffmpeg_sources/libaom
-cd ~/ffmpeg_sources/libaom 
-git clone https://aomedia.googlesource.com/aom
-cmake ./aom -DENABLE_CCACHE=1 -DCMAKE_BUILD_TYPE=Release -DCONFIG_MULTITHREAD=1 -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" \
--DCONFIG_LOWBITDEPTH=1 -DCONFIG_HIGHBITDEPTH=1 \
--DCONFIG_AV1=1 -DHAVE_PTHREAD=1 -DBUILD_SHARED_LIBS=0 -DENABLE_DOCS=0 -DCONFIG_INSTALL_DOCS=0 \
--DCONFIG_INSTALL_BINS=1 -DCONFIG_INSTALL_LIBS=1 \
--DCONFIG_INSTALL_SRCS=1 -DCONFIG_UNIT_TESTS=0 \
--DCONFIG_AV1_DECODER=1 -DCONFIG_AV1_ENCODER=1 \
--DCONFIG_MULTITHREAD=1 -DCONFIG_PIC=1 -DCONFIG_COEFFICIENT_RANGE_CHECKING=1 \
--DCONFIG_RUNTIME_CPU_DETECT=1 -DAOM_TARGET_CPU=generic -DCONFIG_WEBM_IO=1 \
--DCMAKE_SYSTEM_PROCESSOR=x86_64 -DCONFIG_SPATIAL_RESAMPLING=1 -DENABLE_NASM=on
-time make -j$(nproc) VERBOSE=1
-make install -j$(nproc) VERBOSE=1
-```
-
-
-
 Take note that [changes to the inclusion of third party headers](https://git.videolan.org/?p=ffmpeg/nv-codec-headers.git) affects new builds, and this is fixed by:
 
 ```
@@ -285,7 +262,6 @@ PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./conf
   --extra-cflags="-I/usr/local/cuda/include/" \
   --extra-ldflags=-L/usr/local/cuda/lib64/ \
   --enable-gpl \
-  --enable-libaom \
   --enable-libass \
   --enable-libfdk-aac \
   --enable-libx264 \
@@ -320,7 +296,6 @@ PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./conf
   --extra-ldflags=-L/usr/local/cuda/lib64/ \
   --nvccflags="-gencode arch=compute_61,code=sm_61 -O2" \
   --enable-gpl \
-  --enable-libaom \
   --enable-libass \
   --enable-libfdk-aac \
   --enable-libx264 \
@@ -354,7 +329,6 @@ PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./conf
 --extra-ldflags=-L/usr/local/cuda/lib64/ \
 --nvccflags="-gencode arch=compute_52,code=sm_52 -O2" \
 --enable-gpl \
---enable-libaom \
 --enable-libass \
 --enable-libfdk-aac \
 --enable-libx264 \
@@ -382,7 +356,6 @@ PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./conf
   --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
   --bindir="$HOME/bin" \
   --enable-gpl \
-  --enable-libaom \
   --enable-libass \
   --enable-libfdk-aac \
   --enable-libx264 \
@@ -450,28 +423,7 @@ sudo make install
 
 ```
 
-(e). For libaom:
-
-```
-cd ~/ffmpeg_sources/libaom/aom
-git pull
-cd ..
-cmake ./aom -DENABLE_CCACHE=1 -DCMAKE_BUILD_TYPE=Release -DCONFIG_MULTITHREAD=1 -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" \
--DCONFIG_LOWBITDEPTH=1 -DCONFIG_HIGHBITDEPTH=1 \
--DCONFIG_AV1=1 -DHAVE_PTHREAD=1 -DBUILD_SHARED_LIBS=0 -DENABLE_DOCS=0 -DCONFIG_INSTALL_DOCS=0 \
--DCONFIG_INSTALL_BINS=1 -DCONFIG_INSTALL_LIBS=1 \
--DCONFIG_INSTALL_SRCS=1 -DCONFIG_UNIT_TESTS=0 \
--DCONFIG_AV1_DECODER=1 -DCONFIG_AV1_ENCODER=1 \
--DCONFIG_MULTITHREAD=1 -DCONFIG_PIC=1 -DCONFIG_COEFFICIENT_RANGE_CHECKING=1 \
--DCONFIG_RUNTIME_CPU_DETECT=1 -DAOM_TARGET_CPU=generic -DCONFIG_WEBM_IO=1 \
--DCMAKE_SYSTEM_PROCESSOR=x86_64 -DCONFIG_SPATIAL_RESAMPLING=1 -DENABLE_NASM=on
-time make -j$(nproc) VERBOSE=1
-make install -j$(nproc) VERBOSE=1
-
-```
-
-
-**(f). For FFmpeg:**
+**(e). For FFmpeg:**
 
 **i. For Pascal - based GPU systems (GP10x):**
 
@@ -491,7 +443,6 @@ PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig:/usr/li
   --extra-ldflags=-L/usr/local/cuda/lib64/ \
   --nvccflags="-gencode arch=compute_61,code=sm_61 -O2" \
   --enable-gpl \
-  --enable-libaom \
   --enable-libass \
   --enable-libfdk-aac \
   --enable-libx264 \
@@ -523,7 +474,6 @@ PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig:/usr/li
 --extra-ldflags=-L/usr/local/cuda/lib64/ \
 --nvccflags="-gencode arch=compute_52,code=sm_52 -O2" \
 --enable-gpl \
---enable-libaom \
 --enable-libass \
 --enable-libfdk-aac \
 --enable-libx264 \
@@ -550,7 +500,6 @@ PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./conf
   --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
   --bindir="$HOME/bin" \
   --enable-gpl \
-  --enable-libaom \
   --enable-libass \
   --enable-libfdk-aac \
   --enable-libx264 \
