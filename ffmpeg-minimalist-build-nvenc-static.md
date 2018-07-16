@@ -28,7 +28,23 @@ sudo apt-get -y install autoconf automake build-essential libass-dev \
 
 **Install CUDA 9.2 SDK from Nvidia's repository:**
 
-Note that this phase will prompt you to install the device driver. Skip it, and skip the samples too.We will install the driver later. Fetch the repository installers first:
+Ensure that you have the latest driver:
+
+```
+sudo add-apt-repository ppa:graphics-drivers/ppa
+sudo apt-get update && sudo apt-get -y upgrade
+
+```
+
+On Ubuntu 18.04LTS, this should be enough for the device driver:
+
+```
+sudo apt-get install nvidia-kernel-source-396 nvidia-driver-396
+```
+
+We keep the device driver up to the latest version so as to pass FFmpeg's NVENC driver version check.
+
+Fetch the repository installers first:
 
 ```
 cd ~/ffmpeg_sources
@@ -56,23 +72,6 @@ The content should be:
 When done, load the new configuration:
 
 `sudo ldconfig -vvvv`
-
-
-Ensure that you have the latest driver:
-
-```
-sudo add-apt-repository ppa:graphics-drivers/ppa
-sudo apt-get update && sudo apt-get -y upgrade
-
-```
-
-On Ubuntu 18.04LTS, this should be enough for the device driver:
-
-```
-sudo apt-get install nvidia-kernel-source-396 nvidia-driver-396
-```
-
-We keep the device driver up to the latest version so as to pass FFmpeg's NVENC driver version check.
 
 Now, set up the environment variables for CUDA:
 
