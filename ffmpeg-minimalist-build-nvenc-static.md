@@ -45,6 +45,19 @@ sudo apt-get install cuda
 
 ```
 
+Confirm that the library configuration file for CUDA libraries also exists with the correct settings:
+
+`/etc/ld.so.conf.d/cuda.conf`
+
+The content should be:
+
+`/usr/local/cuda/lib64`
+
+When done, load the new configuration:
+
+`sudo ldconfig -vvvv`
+
+
 Ensure that you have the latest driver:
 
 ```
