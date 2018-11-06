@@ -1,4 +1,4 @@
-## Minimalist static FFmpeg build on Ubuntu 16.04 with Nvidia NVENC enabled.
+## Minimalist static FFmpeg build on Ubuntu 18.04 with Nvidia NVENC enabled.
 
 Original guide with a standard build is [here](https://gist.github.com/Brainiarc7/95c9338a737aa36d9bb2931bed379219).
 
@@ -26,7 +26,7 @@ sudo apt-get -y install autoconf automake build-essential libass-dev \
 
 ```
 
-**Install CUDA 9.2 SDK from Nvidia's repository:**
+**Install CUDA 10 SDK from Nvidia's repository:**
 
 Ensure that you have the latest driver:
 
@@ -39,7 +39,7 @@ sudo apt-get update && sudo apt-get -y upgrade
 On Ubuntu 18.04LTS, this should be enough for the device driver:
 
 ```
-sudo apt-get install nvidia-kernel-source-396 nvidia-driver-396
+sudo apt-get install nvidia-kernel-source-410 nvidia-driver-410
 ```
 
 We keep the device driver up to the latest version so as to pass FFmpeg's NVENC driver version check.
@@ -49,11 +49,11 @@ Fetch the repository installers first:
 ```
 cd ~/ffmpeg_sources
 
-wget -c -v -nc https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_9.2.148-1_amd64.deb
+wget -c -v -nc https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-repo-ubuntu1804_10.0.130-1_amd64.deb
 
-sudo dpkg -i cuda-repo-ubuntu1604_9.2.148-1_amd64.deb
+sudo dpkg -i cuda-repo-ubuntu1804_10.0.130-1_amd64.deb
 
-sudo apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub
+sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
 
 sudo apt-get update
 
