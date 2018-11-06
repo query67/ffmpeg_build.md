@@ -103,7 +103,7 @@ source /etc/environment
 ```
 cd ~/ffmpeg_sources
 wget https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/nasm-2.13.03.tar.xz
-tar xzvf nasm-2.13.03.tar.gz
+tar xzvf nasm-2.13.03.tar.xz
 cd nasm-2.13.03
 ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin"
 make -j$(nproc) VERBOSE=1
