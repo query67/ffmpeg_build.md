@@ -118,7 +118,7 @@ make -j$(nproc) distclean
 cd ~/ffmpeg_sources
 git clone http://git.videolan.org/git/x264.git -b stable
 cd x264/
-PATH="$HOME/bin:$PATH" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" --enable-static --enable-shared --disable-opencl
+PATH="$HOME/bin:$PATH" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" --enable-static --enable-pic --disable-opencl
 PATH="$HOME/bin:$PATH" make -j$(nproc) VERBOSE=1
 make -j$(nproc) install
 make -j$(nproc) distclean
@@ -361,6 +361,7 @@ PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./conf
   --enable-libfdk-aac \
   --enable-libx264 \
   --enable-libx265 \
+  --extra-libs=-lpthread \
   --enable-nvenc \
   --enable-nonfree
 PATH="$HOME/bin:$PATH" make -j$(nproc) VERBOSE=1
@@ -393,7 +394,7 @@ make -j$(nproc) distclean
 ```
 cd ~/ffmpeg_sources/x264
 git pull
-PATH="$HOME/bin:$PATH" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" --enable-shared --disable-opencl
+PATH="$HOME/bin:$PATH" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" --enable-static --enable-pic --disable-opencl
 PATH="$HOME/bin:$PATH" make -j$(nproc) VERBOSE=1
 make -j$(nproc) install
 make -j$(nproc) distclean
