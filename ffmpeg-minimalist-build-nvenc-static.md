@@ -448,7 +448,7 @@ PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig:/usr/li
   --enable-libass \
   --enable-libfdk-aac \
   --enable-libx264 \
-  --extra-libs=-lpthread \
+  --extra-libs="-lpthread -lm" \
   --enable-libx265 \
   --enable-nvenc \
   --enable-nonfree
@@ -480,7 +480,7 @@ PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig:/usr/li
 --enable-libfdk-aac \
 --enable-libx264 \
 --enable-libx265 \
---extra-libs=-lpthread \
+--extra-libs="-lpthread -lm" \
 --enable-nvenc \
 --enable-nonfree
 PATH="$HOME/bin:$PATH" make -j$(nproc) VERBOSE=1
@@ -507,6 +507,7 @@ PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./conf
   --enable-libx264 \
   --enable-libx265 \
   --enable-nvenc \
+  --extra-libs="-lpthread -lm" \
   --enable-nonfree
 PATH="$HOME/bin:$PATH" make -j$(nproc) VERBOSE=1
 make -j$(nproc) install
