@@ -298,7 +298,7 @@ PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./conf
   --enable-libnpp \
   --extra-cflags="-I/usr/local/cuda/include/" \
   --extra-ldflags=-L/usr/local/cuda/lib64/ \
-  --nvccflags="-gencode arch=compute_61,code=sm_61 -O2" \
+  --nvccflags="-gencode arch=compute_30,code=sm_30 -O2" \
   --enable-gpl \
   --enable-libass \
   --enable-libfdk-aac \
@@ -306,6 +306,8 @@ PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./conf
   --extra-libs=-lpthread \
   --enable-libx265 \
   --enable-nvenc \
+  --enable-libxcb \
+  --enable-opencl \
   --enable-nonfree
 PATH="$HOME/bin:$PATH" make -j$(nproc) VERBOSE=1
 make -j$(nproc) install
