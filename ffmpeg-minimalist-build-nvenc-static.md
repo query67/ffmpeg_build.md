@@ -244,44 +244,10 @@ sudo make install
 
 Proceed as usual:
 
-**Building a static ffmpeg binary with the required options:**
-
-```
-cd ~/ffmpeg_sources
-git clone https://github.com/FFmpeg/FFmpeg -b master
-cd FFmpeg
-PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
-  --prefix="$HOME/ffmpeg_build" \
-  --pkg-config-flags="--static" \
-  --extra-cflags="-I$HOME/ffmpeg_build/include" \
-  --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
-  --bindir="$HOME/bin" \
-  --enable-cuda-sdk \
-  --enable-cuvid \
-  --enable-libnpp \
-  --extra-cflags="-I/usr/local/cuda/include/" \
-  --extra-ldflags=-L/usr/local/cuda/lib64/ \
-  --nvccflags="-gencode arch=compute_30,code=sm_30 -O2" \  
-  --enable-gpl \
-  --enable-libass \
-  --enable-libfdk-aac \
-  --enable-libx264 \
-  --enable-libx265 \
-  --extra-libs=-lpthread \
-  --enable-nvenc \
-  --enable-opencl \
-  --enable-libxcb \
-  --enable-nonfree
-PATH="$HOME/bin:$PATH" make -j$(nproc) VERBOSE=1
-make -j$(nproc) install
-make -j$(nproc) distclean
-hash -r
 
 ```
 
-You may also want to tune your build further by calling upon NVCC to generate a build optimized for your GPU's CUDA architecture only.
-
-The example below shows the build options to pass for Pascal's GM10x-series GPUs, with an SM version of 6.1:
+Configure to enable x11grab and G2 instance type optimizations for K520
 
 ```
 cd ~/ffmpeg_sources
