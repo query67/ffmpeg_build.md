@@ -118,7 +118,7 @@ make -j$(nproc) distclean
 cd ~/ffmpeg_sources
 git clone http://git.videolan.org/git/x264.git -b stable
 cd x264/
-PATH="$HOME/bin:$PATH" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" --enable-static --enable-pic --disable-opencl
+PATH="$HOME/bin:$PATH" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" --enable-static --enable-pic
 PATH="$HOME/bin:$PATH" make -j$(nproc) VERBOSE=1
 make -j$(nproc) install
 make -j$(nproc) distclean
@@ -261,6 +261,7 @@ PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./conf
   --enable-libnpp \
   --extra-cflags="-I/usr/local/cuda/include/" \
   --extra-ldflags=-L/usr/local/cuda/lib64/ \
+  --nvccflags="-gencode arch=compute_30,code=sm_30 -O2" \  
   --enable-gpl \
   --enable-libass \
   --enable-libfdk-aac \
@@ -268,6 +269,8 @@ PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./conf
   --enable-libx265 \
   --extra-libs=-lpthread \
   --enable-nvenc \
+  --enable-opencl \
+  --enable-libxcb \
   --enable-nonfree
 PATH="$HOME/bin:$PATH" make -j$(nproc) VERBOSE=1
 make -j$(nproc) install
