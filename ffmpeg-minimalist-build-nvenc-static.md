@@ -245,8 +245,6 @@ sudo make install
 Proceed as usual:
 
 
-```
-
 Configure to enable x11grab and G2 instance type optimizations for K520
 
 ```
@@ -274,66 +272,6 @@ PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./conf
   --enable-nvenc \
   --enable-libxcb \
   --enable-opencl \
-  --enable-nonfree
-PATH="$HOME/bin:$PATH" make -j$(nproc) VERBOSE=1
-make -j$(nproc) install
-make -j$(nproc) distclean
-hash -r
-
-```
-
-For the older Maxwell (GM204*-series) cards, the build below will generate optimized binaries for that CUDA architecture:
-
-```
-cd ~/ffmpeg_sources
-git clone https://github.com/FFmpeg/FFmpeg -b master
-cd FFmpeg
-PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
---prefix="$HOME/ffmpeg_build" \
---pkg-config-flags="--static" \
---extra-cflags="-I$HOME/ffmpeg_build/include" \
---extra-ldflags="-L$HOME/ffmpeg_build/lib" \
---bindir="$HOME/bin" \
---enable-cuda \
---enable-cuvid \
---enable-libnpp \
---extra-cflags="-I/usr/local/cuda/include/" \
---extra-ldflags=-L/usr/local/cuda/lib64/ \
---nvccflags="-gencode arch=compute_52,code=sm_52 -O2" \
---enable-gpl \
---enable-libass \
---enable-libfdk-aac \
---enable-libx264 \
---enable-libx265 \
---extra-libs=-lpthread \
---enable-nvenc \
---enable-nonfree
-PATH="$HOME/bin:$PATH" make -j$(nproc)
-make -j$(nproc) install
-make -j$(nproc) distclean
-hash -r
-
-```
-
-Remember the notes above on builds that do not require any CUDA-based filters? This build below will give you exactly that:
-
-```
-cd ~/ffmpeg_sources
-git clone https://github.com/FFmpeg/FFmpeg -b master
-cd FFmpeg
-PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
-  --prefix="$HOME/ffmpeg_build" \
-  --pkg-config-flags="--static" \
-  --extra-cflags="-I$HOME/ffmpeg_build/include" \
-  --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
-  --bindir="$HOME/bin" \
-  --enable-gpl \
-  --enable-libass \
-  --enable-libfdk-aac \
-  --enable-libx264 \
-  --enable-libx265 \
-  --extra-libs=-lpthread \
-  --enable-nvenc \
   --enable-nonfree
 PATH="$HOME/bin:$PATH" make -j$(nproc) VERBOSE=1
 make -j$(nproc) install
