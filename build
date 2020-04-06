@@ -1,0 +1,88 @@
+sudo apt-get install libbz2-1.0 libbz2-dev libbz2-ocaml libbz2-ocaml-dev
+cd ~/ffmpeg_sources
+rm -rf FFmpeg
+git clone https://github.com/FFmpeg/FFmpeg -b master
+cd FFmpeg
+PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
+  --prefix="$HOME/ffmpeg_build" \
+  --pkg-config-flags="--static" \
+  --extra-cflags="-I$HOME/ffmpeg_build/include" \
+  --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
+  --bindir="$HOME/bin" \
+  --enable-cuda-sdk \
+  --enable-cuvid \
+  --enable-libnpp \
+  --extra-cflags="-I/usr/local/cuda/include/" \
+  --extra-ldflags=-L/usr/local/cuda/lib64/ \
+  --nvccflags="-gencode arch=compute_30,code=sm_30 -O2" \
+  --enable-gpl \
+  --enable-libass \
+  --enable-libfdk-aac \
+  --enable-libx264 \
+  --extra-libs=-lpthread \
+  --enable-libx265 \
+  --enable-nvenc \
+  --enable-libxcb \
+  --enable-opencl \
+  --enable-libpulse \
+  --enable-nonfree \
+  --enable-small  \
+  --enable-chromaprint \
+  --enable-frei0r \
+  --enable-gmp \
+  --enable-ladspa \
+  --enable-libaom \
+  --enable-libcaca \
+  --enable-libcdio \
+  --enable-libcodec2 \
+  --enable-libfontconfig \
+  --enable-libfreetype \
+  --enable-libfribidi \
+  --enable-libgme \
+  --enable-libgsm \
+  --enable-libjack \
+  --enable-libmodplug \
+  --enable-libmp3lame \
+  --enable-libopencore-amrnb \
+  --enable-libopencore-amrwb \
+  --enable-libopencore-amrwb \
+  --enable-libopenjpeg \
+  --enable-libopenmpt \
+  --enable-libopus \
+  --enable-librubberband \
+  --enable-libshine \
+  --enable-libsnappy \
+  --enable-libsoxr \
+  --enable-libspeex \
+  --enable-libssh \
+  --enable-libtheora \
+  --enable-libtwolame \
+  --enable-libvo-amrwbenc \
+  --enable-libvorbis \
+  --enable-libvpx \
+  --enable-libwavpack \
+  --enable-libwebp \
+  --enable-libxvid \
+  --enable-libzvbi \
+  --enable-lv2 \
+  --enable-openal \
+  --enable-opengl \
+  --enable-libdrm \
+  --enable-version3 \
+  --enable-muxer=rtsp \
+  --enable-protocol=rtp \
+  --enable-demuxer=rtsp \
+  --enable-bzlib \
+  --enable-frei0r \
+  --enable-libmp3lame \
+  --enable-libtheora \
+  --enable-static \
+  --enable-runtime-cpudetect \
+  --enable-openssl \
+  --disable-libmfx \
+  --enable-cuda \
+  --enable-nvdec
+PATH="$HOME/bin:$PATH" make -j$(nproc) VERBOSE=1
+make -j$(nproc) install
+make -j$(nproc) distclean
+hash -r
