@@ -1,0 +1,8 @@
+
+
+mkdir -p ~/ffmpeg_sources/libaom && \
+  cd ~/ffmpeg_sources/libaom && \
+  git clone https://aomedia.googlesource.com/aom && \
+  cmake ./aom && \
+  make && \
+  sudo make install
